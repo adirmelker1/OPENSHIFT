@@ -1,5 +1,6 @@
 # docker build -t flask-api .
 # docker run -d --name flask-hello-app -p 8080:5000 flask-api
+# docker run -d -e TEST='test' --name flask-hello-app -p 8080:5000 flask-api
 FROM python:3.12-slim
 
 WORKDIR /app
