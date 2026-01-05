@@ -26,7 +26,7 @@ oc delete deployment $app_name
 
 # 4. BuildConfig
 echo "BuildConfig..."
-if oc delete bc "$app_name" 2>&1 | grep NotFound; then
+if oc delete bc "$app_name" 2>&1 | grep -q NotFound; then
   echo "BuildConfig not found"
 else
   echo "BuildConfig found"
