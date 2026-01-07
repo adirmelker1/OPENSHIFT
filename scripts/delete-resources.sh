@@ -39,6 +39,11 @@ echo "ImageStreams..."
 #     echo "Deleting ImageStream: $is_name"
 #     oc delete is "$is_name"
 # done
-oc delete is --all
+# oc delete is --all
+if [ "$app_name" = "openshift-from-zero" ]; then
+  oc delete is python --ignore-not-found
+fi
+
+oc delete is $app_name --ignore-not-found
 
 echo "Script completed."
