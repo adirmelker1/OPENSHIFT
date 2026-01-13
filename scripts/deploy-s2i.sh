@@ -1,0 +1,1 @@
+oc new-app python:3.12-minimal-ubi9~https://gitlab.com/udemyprojects2561552/openshift-from-zero.git#feat/5 --context-dir=flask-api-b/src --name=flask-api-c -e APP_FILE=main.py
