@@ -1,3 +1,5 @@
+# docker compose up -d
+# docker compose down
 services:
   postgresql:
     image: postgres:12
