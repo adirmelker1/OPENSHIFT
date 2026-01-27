@@ -1,0 +1,2 @@
+File api-0.0.1-SNAPSHOT.jar can be downloaded from branch feat/12
+https://gitlab.com/udemyprojects2561552/openshift-from-zero/-/tree/feat/12?ref_type=heads
