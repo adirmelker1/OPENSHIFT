@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-boot-api
+    app.kubernetes.io/component: spring-boot-api
+    app.kubernetes.io/instance: spring-boot-api
+  name: spring-boot-api
+  namespace: discoverprogramming-dev
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    deployment: spring-boot-api
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
