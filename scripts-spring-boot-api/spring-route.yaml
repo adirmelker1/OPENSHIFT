@@ -1,0 +1,17 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring-boot-api
+    app.kubernetes.io/component: spring-boot-api
+    app.kubernetes.io/instance: spring-boot-api
+  name: spring-boot-api
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: ""
+    name: spring-boot-api
+    weight: null
+status: {}
