@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"spring-boot-api:latest","namespace":"discoverprogramming-dev"},"fieldPath":"spec.template.spec.containers[?(@.name==\"spring-boot-api\")].image"}]'
+    openshift.io/generated-by: OpenShiftNewApp
+  labels:
+    app: spring-boot-api
+    app.kubernetes.io/component: spring-boot-api
+    app.kubernetes.io/instance: spring-boot-api
+  name: spring-boot-api
+  namespace: discoverprogramming-dev
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      deployment: spring-boot-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        deployment: spring-boot-api
+    spec:
+      containers:
+      - env:
+        - name: SPRING_CONFIG_LOCATION
+          value: /config/
+        image: discoverprogramming-dev/spring-boot-api:latest
+        imagePullPolicy: IfNotPresent
+        name: spring-boot-api
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        startupProbe:
+          httpGet:
+            path: /todos
+            port: 8080
+            scheme: HTTP
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        volumeMounts:
+        - mountPath: /config
+          name: spring-boot-api-volume
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: spring-boot-api-cm
+        name: spring-boot-api-volume
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spring-boot-api
+    app.kubernetes.io/component: spring-boot-api
+    app.kubernetes.io/instance: spring-boot-api
+  name: spring-boot-api
+  namespace: discoverprogramming-dev
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    deployment: spring-boot-api
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  creationTimestamp: null
+  labels:
+    app: spring-boot-api
+    app.kubernetes.io/component: spring-boot-api
+    app.kubernetes.io/instance: spring-boot-api
+  name: spring-boot-api
+spec:
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: ""
+    name: spring-boot-api
+    weight: null
+status: {}
