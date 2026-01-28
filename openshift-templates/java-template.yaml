@@ -7,13 +7,13 @@ objects:
     kind: Deployment
     metadata:
       annotations:
-        image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"${SOURCE_REPOSITORY_URL}:latest","namespace":"discoverprogramming-dev"},"fieldPath":"spec.template.spec.containers[?(@.name==\"${SOURCE_REPOSITORY_URL}\")].image"}]'
+        image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"${APPLICATION_NAME}:latest","namespace":"discoverprogramming-dev"},"fieldPath":"spec.template.spec.containers[?(@.name==\"${APPLICATION_NAME}\")].image"}]'
         openshift.io/generated-by: OpenShiftNewApp
       labels:
-        app: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/component: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/instance: ${SOURCE_REPOSITORY_URL}
-      name: ${SOURCE_REPOSITORY_URL}
+        app: ${APPLICATION_NAME}
+        app.kubernetes.io/component: ${APPLICATION_NAME}
+        app.kubernetes.io/instance: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
       namespace: discoverprogramming-dev
     spec:
       progressDeadlineSeconds: 600
@@ -21,7 +21,7 @@ objects:
       revisionHistoryLimit: 10
       selector:
         matchLabels:
-          deployment: ${SOURCE_REPOSITORY_URL}
+          deployment: ${APPLICATION_NAME}
       strategy:
         rollingUpdate:
           maxSurge: 25%
@@ -30,15 +30,15 @@ objects:
       template:
         metadata:
           labels:
-            deployment: ${SOURCE_REPOSITORY_URL}
+            deployment: ${APPLICATION_NAME}
         spec:
           containers:
           - env:
             - name: SPRING_CONFIG_LOCATION
               value: /config/
-            image: discoverprogramming-dev/${SOURCE_REPOSITORY_URL}:latest
+            image: discoverprogramming-dev/${APPLICATION_NAME}:latest
             imagePullPolicy: IfNotPresent
-            name: ${SOURCE_REPOSITORY_URL}
+            name: ${APPLICATION_NAME}
             ports:
             - containerPort: 8080
               protocol: TCP
@@ -56,7 +56,7 @@ objects:
               failureThreshold: 3
             volumeMounts:
             - mountPath: /config
-              name: ${SOURCE_REPOSITORY_URL}-volume
+              name: ${APPLICATION_NAME}-volume
           dnsPolicy: ClusterFirst
           restartPolicy: Always
           schedulerName: default-scheduler
@@ -65,17 +65,17 @@ objects:
           volumes:
           - configMap:
               defaultMode: 420
-              name: ${SOURCE_REPOSITORY_URL}-cm
-            name: ${SOURCE_REPOSITORY_URL}-volume
+              name: ${APPLICATION_NAME}-cm
+            name: ${APPLICATION_NAME}-volume
 
   - apiVersion: v1
     kind: Service
     metadata:
       labels:
-        app: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/component: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/instance: ${SOURCE_REPOSITORY_URL}
-      name: ${SOURCE_REPOSITORY_URL}
+        app: ${APPLICATION_NAME}
+        app.kubernetes.io/component: ${APPLICATION_NAME}
+        app.kubernetes.io/instance: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
       namespace: discoverprogramming-dev
     spec:
       internalTrafficPolicy: Cluster
@@ -88,7 +88,7 @@ objects:
         protocol: TCP
         targetPort: 8080
       selector:
-        deployment: ${SOURCE_REPOSITORY_URL}
+        deployment: ${APPLICATION_NAME}
       sessionAffinity: None
       type: ClusterIP
     status:
@@ -99,16 +99,16 @@ objects:
     metadata:
       creationTimestamp: null
       labels:
-        app: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/component: ${SOURCE_REPOSITORY_URL}
-        app.kubernetes.io/instance: ${SOURCE_REPOSITORY_URL}
-      name: ${SOURCE_REPOSITORY_URL}
+        app: ${APPLICATION_NAME}
+        app.kubernetes.io/component: ${APPLICATION_NAME}
+        app.kubernetes.io/instance: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
     spec:
       port:
         targetPort: 8080-tcp
       to:
         kind: ""
-        name: ${SOURCE_REPOSITORY_URL}
+        name: ${APPLICATION_NAME}
         weight: null
     status: {}
 
