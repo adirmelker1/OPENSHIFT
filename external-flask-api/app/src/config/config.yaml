@@ -1,0 +1,2 @@
+app_name: External-flask-api
+flask_api_url: http://openshift-from-zero:5000
