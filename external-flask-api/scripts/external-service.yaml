@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: openshift-from-zero
+spec:
+  type: ExternalName
+  externalName: openshift-from-zero.discoverprogramming-dev.svc.cluster.local
+  ports:
+    - name: 5000-tcp
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  sessionAffinity: None
+status:
+  loadBalncer: {}
